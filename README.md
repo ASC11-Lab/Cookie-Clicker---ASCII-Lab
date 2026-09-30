@@ -21,7 +21,7 @@ Um jogo incremental (*idle/clicker*) com estética retro da Web 2.0 de 2006. O p
 
 ## 🌐 Jogue Online
 
-> **Acesse a versão ao vivo:** `https://sux-976.github.io/Cookie-Clicker---ASCII-Art/`  
+> **Acesse a versão ao vivo:** ` `  
 
 ---
 
