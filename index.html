@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Cookie Clicker em estilo ASCII, edição 2006. Jogue direto no navegador.">
+<meta name="theme-color" content="#ffffff">
+<title>COOKIE CLICKER :: EDIÇÃO ASCII 2006</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%AA%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header>
+  <div class="ascii-banner" id="banner"></div>
+  <div class="news-ticker"><span class="news-label">NOTICIAS ASCII:</span><span class="news-text" id="news-text">Carregando notícias...</span></div>
+</header>
+
+<main class="game-grid">
+  <section class="column col-left">
+    <div class="ascii-box">
+      <div class="ascii-box-header"><span>[ CONTADOR DE BISCOITOS ]</span></div>
+      <div style="text-align:center;margin:5px 0">
+        <div style="font-size:16px;font-weight:bold" id="cookie-count">0 biscoitos</div>
+        <div style="font-size:11px" id="cps-count">biscoitos por seg.: 0</div>
+        <div style="font-size:10px;color:#555" id="click-power-count">poder do clique: 1</div>
+      </div>
+    </div>
+    <div id="frenzy-box" class="frenzy-indicator">!!! EFEITO ATIVO: <span id="frenzy-name">FRENESI</span> (<span id="frenzy-time">0</span>s) !!!</div>
+    <div class="ascii-box cookie-container">
+      <div class="cookie-art" id="cookie-clicker" role="button" tabindex="0" title="Clique para assar um biscoito ASCII!"></div>
+    </div>
+    <div class="ascii-box">
+      <div class="ascii-box-header"><span>[ SISTEMA &amp; SAVE ]</span></div>
+      <button class="retro-btn" id="btn-save">💾 Salvar Jogo (Local)</button>
+      <button class="retro-btn" id="btn-export">📋 Exportar / Importar Código</button>
+      <button class="retro-btn" id="btn-wipe" style="color:#aa0000">🗑️ Reiniciar Tudo (Wipe)</button>
+    </div>
+  </section>
+
+  <section class="column col-mid">
+    <div class="ascii-box" style="flex:1">
+      <div class="tabs-bar">
+        <button class="tab-btn active" data-tab="tab-upgrades">Upgrades</button>
+        <button class="tab-btn" data-tab="tab-achievements">Conquistas</button>
+        <button class="tab-btn" data-tab="tab-stats">Estatísticas</button>
+        <button class="tab-btn" data-tab="tab-ascend">Ascensão</button>
+      </div>
+      <div id="tab-upgrades" class="tab-content active">
+        <div style="font-weight:bold;margin-bottom:5px">[ MELHORIAS DISPONÍVEIS ]</div>
+        <div class="upgrade-grid" id="upgrade-list"></div>
+        <div id="upgrade-desc" style="font-size:10px;color:#555;min-height:24px"></div>
+      </div>
+      <div id="tab-achievements" class="tab-content">
+        <div style="font-weight:bold;margin-bottom:5px">[ CONQUISTAS (<span id="achieve-count">0/0</span>) ]</div>
+        <div id="achievements-list" style="max-height:300px;overflow-y:auto"></div>
+      </div>
+      <div id="tab-stats" class="tab-content">
+        <div style="font-weight:bold;margin-bottom:5px">[ ESTATÍSTICAS GERAIS ]</div>
+        <div id="stats-container" style="font-size:11px;line-height:1.5"></div>
+      </div>
+      <div id="tab-ascend" class="tab-content">
+        <div style="font-weight:bold;margin-bottom:5px">[ REINÍCIO CELESTIAL ]</div>
+        <p style="margin-bottom:8px;font-size:11px">Reinicie seus biscoitos para obter Chips ASCII. Cada chip concede +1% permanente de CPS. Chips = raiz cúbica de (biscoitos totais / 1 milhão).</p>
+        <div class="ascii-box" style="background:#fafafa;margin-bottom:10px;text-align:center">
+          <div>Chips a ganhar: <b id="ascend-chips-gain">0</b></div>
+          <div>Chips ASCII atuais: <b id="ascend-chips-current">0</b></div>
+          <div>Bônus atual de CPS: <b id="ascend-bonus-current">+0%</b></div>
+        </div>
+        <button class="retro-btn" id="btn-ascend-action" style="text-align:center;font-weight:bold;padding:8px" disabled>⚡ ASCENDER AGORA ⚡</button>
+      </div>
+    </div>
+    <div class="ascii-box">
+      <div class="ascii-box-header"><span>[ LOG DO SISTEMA ]</span></div>
+      <div class="log-box" id="system-log"></div>
+    </div>
+  </section>
+
+  <section class="column col-right">
+    <div class="ascii-box" style="flex:1">
+      <div class="ascii-box-header"><span>[ LOJA DE CONSTRUÇÕES ]</span><span style="font-size:10px;font-weight:normal">Qtd.</span></div>
+      <div id="buildings-shop" style="max-height:520px;overflow-y:auto"></div>
+    </div>
+  </section>
+</main>
+
+<footer id="footer" style="margin-top:15px;text-align:center;font-size:10px;white-space:pre;overflow-x:auto"></footer>
+
+<div id="modal-export" class="modal-overlay">
+  <div class="modal-content">
+    <div style="font-weight:bold;border-bottom:1px solid #000;padding-bottom:4px">[ EXPORTAR / IMPORTAR CÓDIGO DE SAVE ]</div>
+    <p style="font-size:11px;margin-top:6px">Copie o código para guardar ou cole um código antigo para carregar:</p>
+    <textarea id="save-code-input" class="ascii-input"></textarea>
+    <div style="display:flex;gap:6px">
+      <button class="retro-btn" id="btn-copy-code" style="text-align:center">Copiar</button>
+      <button class="retro-btn" id="btn-load-code" style="text-align:center">Carregar Código</button>
+      <button class="retro-btn" id="btn-close-export-modal" style="text-align:center;width:80px">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-alert" class="modal-overlay">
+  <div class="modal-content" style="max-width:380px">
+    <div style="font-weight:bold;border-bottom:1px solid #000;padding-bottom:4px">[ NOTIFICAÇÃO DO SISTEMA ]</div>
+    <p id="modal-alert-text" style="font-size:11px;margin:12px 0;font-weight:bold;text-align:center"></p>
+    <button class="retro-btn" id="btn-close-alert-modal" style="text-align:center;font-weight:bold">OK</button>
+  </div>
+</div>
+
+<div id="modal-confirm" class="modal-overlay">
+  <div class="modal-content" style="max-width:420px">
+    <div style="font-weight:bold;border-bottom:1px solid #000;padding-bottom:4px;color:#aa0000">[ CONFIRMAÇÃO REQUERIDA ]</div>
+    <p id="modal-confirm-text" style="font-size:11px;margin:12px 0;white-space:pre-line"></p>
+    <div style="display:flex;gap:8px">
+      <button class="retro-btn" id="btn-confirm-yes" style="text-align:center;font-weight:bold">Sim, Confirmar</button>
+      <button class="retro-btn" id="btn-confirm-no" style="text-align:center">Cancelar</button>
+    </div>
+  </div>
+</div>
+<noscript><p style="margin-top:10px;font-weight:bold">Este jogo precisa de JavaScript ativado.</p></noscript>
+<script src="./data.js" defer></script>
+<script src="./game.js" defer></script>
+</body>
+</html>
